@@ -216,30 +216,20 @@ public class AbstractApplicationAuthenticatorTest {
         Assert.assertNull(abstractApplicationAuthenticator.getClaimDialectURI());
     }
 
-    @Test(dataProvider = "userProvider")
-    public void testSetTenantDomainToUserName(Object userObj, boolean isSuccess) throws Exception {
+    @Test
+    public void testSetTenantDomainToUserName() throws Exception {
 
-        User user = (User) userObj;
+        User user = new User();
         mockStatic(FrameworkServiceDataHolder.class);
         when(FrameworkServiceDataHolder.getInstance()).thenReturn(frameworkServiceDataHolder);
         when(frameworkServiceDataHolder.getAuthnDataPublisherProxy()).thenReturn(authenticationDataPublisherProxy);
         when(authenticationDataPublisherProxy.isEnabled(any())).thenReturn(true);
         doCallRealMethod().when(testApplicationAuthenticator)
                 .publishAuthenticationStepAttempt(request, context, user, true);
-        testApplicationAuthenticator.publishAuthenticationStepAttempt(request, context, user, isSuccess);
-        if (user != null) {
-            Assert.assertEquals(user.getTenantDomain(), TENANT_DOMAIN);
-        }
+        testApplicationAuthenticator.publishAuthenticationStepAttempt(request, context, user, true);
+        Assert.assertEquals(user.getTenantDomain(), TENANT_DOMAIN);
     }
 
-    @DataProvider(name = "userProvider")
-    public Object[][] getUsers() {
-
-        return new Object[][]{
-                {new User(), true},
-                {null, false}
-        };
-    }
 
     @DataProvider(name = "usernameProvider")
     public Object[][] getUsernames() {

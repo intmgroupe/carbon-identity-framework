@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.core.AbstractIdentityUserOperationEventListener;
-import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.user.api.Permission;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
@@ -37,17 +36,6 @@ public class UserMgtAuditLogger extends AbstractIdentityUserOperationEventListen
     private static final String SUCCESS = "Success";
 
     private static String AUDIT_MESSAGE = "Initiator : %s | Action : %s | Target : %s | Data : { %s } | Result : %s ";
-
-    @Override
-    public int getExecutionOrderId() {
-
-        int orderId = getOrderId();
-        if (orderId != IdentityCoreConstants.EVENT_LISTENER_ORDER_ID) {
-            return orderId;
-        }
-
-        return 8;
-    }
 
     public boolean doPostAddUser(String userName, Object credential, String[] roleList, Map<String, String> claims,
                                  String profile, UserStoreManager userStoreManager) throws UserStoreException {
@@ -161,8 +149,7 @@ public class UserMgtAuditLogger extends AbstractIdentityUserOperationEventListen
         }
 
         audit.info(String.format(AUDIT_MESSAGE, getUser(), "Update Users of Role", roleName,
-                "UsersAdded : " + Arrays.toString(newUsers) + ", UsersRemoved : " +
-                        Arrays.toString(deletedUsers), SUCCESS));
+                "Users : " + Arrays.toString(newUsers), SUCCESS));
         return true;
     }
 
@@ -174,8 +161,7 @@ public class UserMgtAuditLogger extends AbstractIdentityUserOperationEventListen
         }
 
         audit.info(String.format(AUDIT_MESSAGE, getUser(), "Update Roles of User", userName,
-                "RolesAdded : " + Arrays.toString(newRoles) + ", RolesRemoved : "
-                        + Arrays.toString(deletedRoles), SUCCESS));
+                "Roles : " + Arrays.toString(newRoles), SUCCESS));
         return true;
     }
 

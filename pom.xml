@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<!-- Modified by INTM for EDF/Enedis -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -34,7 +35,7 @@
         <url>https://github.com/wso2/carbon-identity-framework.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-identity-framework.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-identity-framework.git</connection>
-        <tag>v5.17.6</tag>
+        <tag>v5.17.5</tag>
     </scm>
 
     <modules>
@@ -1780,8 +1781,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Carbon kernel version -->
-        <carbon.kernel.version>4.6.0</carbon.kernel.version>
-        <carbon.kernel.feature.version>4.6.0</carbon.kernel.feature.version>
+        <carbon.kernel.version>4.6.1</carbon.kernel.version>
+        <carbon.kernel.feature.version>4.6.1</carbon.kernel.feature.version>
         <carbon.kernel.package.import.version.range>[4.5.0, 5.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
         <carbon.consent.mgt.imp.pkg.version.range>[1.0.0, 3.0.0)</carbon.consent.mgt.imp.pkg.version.range>

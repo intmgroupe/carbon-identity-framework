@@ -50,7 +50,7 @@ import java.util.List;
 public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProviderDO> {
 
     private static final String CERTIFICATE_PROPERTY_NAME = "CERTIFICATE";
-    private static final String QUERY_TO_GET_APPLICATION_CERTIFICATE_ID = "SELECT " +
+    private static String QUERY_TO_GET_APPLICATION_CERTIFICATE_ID = "SELECT " +
             "META.VALUE " +
             "FROM " +
             "SP_INBOUND_AUTH INBOUND," +
@@ -59,7 +59,7 @@ public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProvide
             "WHERE SP.ID = INBOUND.APP_ID AND " +
             "SP.ID = META.SP_ID AND " +
             "META.NAME = ? AND " +
-            "INBOUND.INBOUND_AUTH_KEY = ? AND META.TENANT_ID = ?";
+            "INBOUND.INBOUND_AUTH_KEY = ?";
 
     private static Log log = LogFactory.getLog(SAMLSSOServiceProviderDAO.class);
 
@@ -597,10 +597,10 @@ public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProvide
             throws SQLException, CertificateRetrievingException {
 
         // Check whether there is a certificate stored against the service provider (in the database)
-        int applicationCertificateId = getApplicationCertificateId(serviceProviderDO.getIssuer(), tenant.getId());
+        int applicationCertificateId = getApplicationCertificateId(serviceProviderDO.getIssuer());
 
-        CertificateRetriever certificateRetriever;
-        String certificateIdentifier;
+        CertificateRetriever certificateRetriever = null;
+        String certificateIdentifier = null;
         if (applicationCertificateId != -1) {
             certificateRetriever = new DatabaseCertificateRetriever();
             certificateIdentifier = Integer.toString(applicationCertificateId);
@@ -619,20 +619,23 @@ public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProvide
      * @return
      * @throws SQLException
      */
-    private int getApplicationCertificateId(String issuer, int tenantId) throws SQLException {
+    private int getApplicationCertificateId(String issuer) throws SQLException {
 
-        try (Connection connection = IdentityDatabaseUtil.getDBConnection(false);
-             PreparedStatement statementToGetApplicationCertificate =
-                     connection.prepareStatement(QUERY_TO_GET_APPLICATION_CERTIFICATE_ID)) {
+        Connection connection = IdentityDatabaseUtil.getDBConnection(false);
+        PreparedStatement statementToGetApplicationCertificate = null;
+        ResultSet queryResults = null;
+
+        try {
+            statementToGetApplicationCertificate = connection.prepareStatement(QUERY_TO_GET_APPLICATION_CERTIFICATE_ID);
             statementToGetApplicationCertificate.setString(1, CERTIFICATE_PROPERTY_NAME);
             statementToGetApplicationCertificate.setString(2, issuer);
-            statementToGetApplicationCertificate.setInt(3, tenantId);
 
-            try (ResultSet queryResults = statementToGetApplicationCertificate.executeQuery()) {
-                if (queryResults.next()) {
-                    return queryResults.getInt(1);
-                }
+            queryResults = statementToGetApplicationCertificate.executeQuery();
+            while (queryResults.next()) {
+                return queryResults.getInt(1);
             }
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, queryResults, statementToGetApplicationCertificate);
         }
 
         return -1;

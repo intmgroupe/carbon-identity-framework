@@ -1,3 +1,4 @@
+<!-- Modified by INTM for EDF/Enedis -->
 <!--
  ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
@@ -15,6 +16,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<!-- Modified by INTM for EDF/Enedis -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
